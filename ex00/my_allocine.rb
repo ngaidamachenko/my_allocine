@@ -27,5 +27,5 @@ requests["Find all the actors who have not acted in any movie between 1990 and 2
 FROM actors 
 LEFT JOIN movies_actors ON actors.id = movies_actors.act_id 
 LEFT JOIN movies ON movies_actors.mov_id = movies.id 
-WHERE NOT(movies.mov_dt_rel >= '1990-01-01' AND movies.mov_dt_rel <= '2000-12-31') 
+WHERE yr_rel is NULL OR NOT(yr_rel >= 1990 AND yr_rel <= 2000)
 ORDER BY actors.id ASC;"
