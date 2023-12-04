@@ -11,8 +11,15 @@ requests["Find the titles of the movies with ID 905, 907, 917"] = "SELECT mov_ti
 requests["Find the list of those movies with year and ID which include the words Boogie Nights"] = "SELECT id, mov_title, mov_year FROM movies WHERE mov_title LIKE '%Boogie Nights%';"
 requests["Find the ID number for the actor whose first name is 'Woody' and the last name is 'Allen'"] = "SELECT id FROM actors WHERE act_fname = 'Woody' AND act_lname = 'Allen';"
 
-requests["Find the actors with all information who played a role in the movies 'Annie Hall'"] = "SELECT actors.* FROM actors JOIN movies_actors ON actors.id = movies_actors.id JOIN movies ON movies.id = movies_actors.mov_id WHERE mov_title = 'Annie Hall';"
-requests["Find the first and last names of all the actors who were cast in the movies 'Annie Hall', and the roles they played in that production"] = ""
+requests["Find the actors with all information who played a role in the movies 'Annie Hall'"] = "SELECT actors.* FROM actors JOIN movies_actors ON actors.id = movies_actors.act_id JOIN movies ON movies.id = movies_actors.mov_id WHERE mov_title = 'Annie Hall';"
+requests["Find the first and last names of all the actors who were cast in the movies 'Annie Hall', and the roles they played in that production"] = "SELECT act_fname, act_lname, role FROM actors JOIN movies_actors ON movies_actors.act_id = actors.id JOIN movies ON movies.id = movies_actors.mov_id WHERE mov_title = 'Annie Hall';"
 
-requests["Find the name of movie and director who directed a movies that casted a role as Sean Maguire"] = ""
+requests["Find the name of movie and director who directed a movies that casted a role as Sean Maguire"] = 
+"SELECT directors.dir_fname, directors.dir_lname, movies.mov_title
+FROM movies 
+JOIN movies_actors ON movies.id = movies_actors.mov_id
+JOIN directors ON directors.id = directors_movies.dir_id
+JOIN directors_movies ON movies.id = directors_movies.mov_id 
+WHERE role = 'Sean Maguire';"
+
 requests["Find all the actors who have not acted in any movie between 1990 and 2000 (select only actor first name, last name, movie title and release year)"] = ""
