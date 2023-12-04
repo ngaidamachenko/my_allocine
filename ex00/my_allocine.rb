@@ -22,4 +22,10 @@ JOIN directors ON directors.id = directors_movies.dir_id
 JOIN directors_movies ON movies.id = directors_movies.mov_id 
 WHERE role = 'Sean Maguire';"
 
-requests["Find all the actors who have not acted in any movie between 1990 and 2000 (select only actor first name, last name, movie title and release year)"] = ""
+requests["Find all the actors who have not acted in any movie between 1990 and 2000 (select only actor first name, last name, movie title and release year)"] = 
+"SELECT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
+FROM actors 
+LEFT JOIN movies_actors ON actors.id = movies_actors.act_id 
+LEFT JOIN movies ON movies_actors.mov_id = movies.id 
+WHERE NOT(movies.mov_dt_rel >= '1990-01-01' AND movies.mov_dt_rel <= '2000-12-31') 
+ORDER BY actors.id ASC;"
