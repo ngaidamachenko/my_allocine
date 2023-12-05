@@ -23,9 +23,25 @@ JOIN directors_movies ON movies.id = directors_movies.mov_id
 WHERE role = 'Sean Maguire';"
 
 requests["Find all the actors who have not acted in any movie between 1990 and 2000 (select only actor first name, last name, movie title and release year)"] = 
-"SELECT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
-FROM actors 
-LEFT JOIN movies_actors ON actors.id = movies_actors.act_id 
-LEFT JOIN movies ON movies_actors.mov_id = movies.id 
-WHERE yr_rel is NULL OR NOT(yr_rel >= 1990 AND yr_rel <= 2000)
-ORDER BY actors.id ASC;"
+"SELECT DISTINCT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
+FROM actors
+LEFT JOIN movies_actors ON actors.id = movies_actors.act_id
+LEFT JOIN movies ON movies_actors.mov_id = movies.id
+WHERE actors.id NOT IN (
+    SELECT DISTINCT actors.id
+    FROM actors
+    JOIN movies_actors ON actors.id = movies_actors.act_id
+    JOIN movies ON movies_actors.mov_id = movies.id
+    WHERE yr_rel BETWEEN 1990 AND 2000
+)
+ORDER BY actors.id;
+"
+
+#"SELECT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
+#FROM actors 
+#LEFT JOIN movies_actors ON actors.id = movies_actors.act_id 
+#LEFT JOIN movies ON movies_actors.mov_id = movies.id 
+#WHERE NOT yr_rel >= 1990 AND yr_rel <= 2000
+#ORDER BY actors.id ASC;"
+
+#LEFT JOIN - add another table ON table1.column = table2.column 
