@@ -74,20 +74,23 @@ JOIN directors_movies ON movies.id = directors_movies.mov_id
 WHERE role = 'Sean Maguire';"
 
 requests["Find all the actors who have not acted in any movie between 1990 and 2000 (select only actor first name, last name, movie title and release year)"] = 
-"SELECT DISTINCT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
+"SELECT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS release_year
 FROM actors
 LEFT JOIN movies_actors ON actors.id = movies_actors.act_id
-LEFT JOIN movies ON movies_actors.mov_id = movies.id
+LEFT JOIN movies ON movies.id = movies_actors.mov_id
 WHERE actors.id NOT IN (
     SELECT DISTINCT actors.id
     FROM actors
     JOIN movies_actors ON actors.id = movies_actors.act_id
-    JOIN movies ON movies_actors.mov_id = movies.id
-    WHERE yr_rel BETWEEN 1990 AND 2000
+    JOIN movies ON movies.id = movies_actors.mov_id
+    WHERE CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) BETWEEN 1990 AND 2000
 )
+AND (release_year < 1990 OR release_year > 2000 OR release_year IS NOT NULL)
 ORDER BY actors.id;
 "
 
+# I still think is line 86
+# Now names are correct, but years are off. But If I switch types of years, then names are off YEAAAH BOOOOIIIII
 #"SELECT actors.act_fname, actors.act_lname, movies.mov_title, CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
 #FROM actors 
 #LEFT JOIN movies_actors ON actors.id = movies_actors.act_id 
@@ -95,4 +98,5 @@ ORDER BY actors.id;
 #WHERE NOT yr_rel >= 1990 AND yr_rel <= 2000
 #ORDER BY actors.id ASC;"
 
+#CAST(SUBSTR(movies.mov_dt_rel, 1, 4) AS INTEGER) AS yr_rel
 #LEFT JOIN - add another table ON table1.column = table2.column 
